@@ -1,13 +1,18 @@
 import type { NextPage } from 'next'
+import Link from 'next/link'
 import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
   return (
       <div className={styles.container}>
-          <div className="w-100 flex items-center">
-              <div className="pa5">
+          <div className="w-100 flex pa5 justify-between">
+              <div>
                   Hello World
               </div>
+
+              <Link href="/image-upload">
+                  <a>Try uploading an image</a>
+              </Link>
           </div>
 
           <footer className={styles.footer}>
