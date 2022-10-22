@@ -1,9 +1,9 @@
 import {mintNFT} from "./mint-nft.mjs"
 
-async function airdropNFT(contractName, contractAddresses, metaDataURL) {
+async function airdropNFT(contractName, contractAddress, metaDataURL, recevierAddresses) {
 
-    for (var contractAddress of contractAddresses) {
-        mintNFT(contractName, contractAddress, metaDataURL)
+    for (var address of recevierAddresses) {
+        mintNFT(contractName, contractAddress, metaDataURL, address)
             .then(() => process.exit(0))
             .catch((error) => {
                 console.error(error);

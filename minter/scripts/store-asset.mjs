@@ -17,6 +17,7 @@ export async function storeAsset(nftName, description) {
        ),
    })
    console.log("Metadata stored on Filecoin and IPFS with URL:", metadata.url)
+   return metadata.url
 }
 
 storeAsset("MyNFT", "My random NFT!")

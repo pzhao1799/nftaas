@@ -7,6 +7,7 @@ export async function deployContract(contractName) {
     const txReceipt = await ethers.provider.waitForTransaction(txHash)
     const contractAddress = txReceipt.contractAddress
     console.log("Contract deployed to address:", contractAddress)
+    return contractAddress
 }
 
 deployContract("NFT")
