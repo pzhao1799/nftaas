@@ -1,4 +1,4 @@
-import { ethers } from "hardhat"
+const ethers = require("hardhat")
 const express = require('express')
 const app = express()
 const port = 3000
