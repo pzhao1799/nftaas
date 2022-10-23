@@ -4,11 +4,14 @@
     "start": "node src/app.js"
   },
   "dependencies": {
+    "@moralisweb3/core": "^2.6.7",
+    "@moralisweb3/evm-api": "^2.6.7",
     "@nomiclabs/hardhat-ethers": "^2.2.0",
     "@openzeppelin/contracts": "^4.7.3",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "hardhat": "^2.12.0",
+    "moralis": "^2.6.7",
     "nft.storage": "^7.0.0"
   }
 }

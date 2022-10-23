@@ -10,9 +10,6 @@ async function airdropNFT(contractName, contractAddress, metaDataURL, recevierAd
                 process.exit(1);
         });
     }
-    
-  
-
 }
 
 airdropNFT()

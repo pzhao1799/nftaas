@@ -1,11 +1,17 @@
+const Moralis = require('moralis').default
+const { NFTStorage, File } = require('nft.storage')
 const express = require('express')
 const mintNFT = require('../scripts/mint-nft.mjs')
 const airdropNFT = require('../scripts/airdrop-nft.mjs')
 const storeAsset = require('../scripts/store-asset.mjs')
 const deployContract = require('../scripts/deploy-contract.mjs')
+const displayNFT = require('../scripts/display-nft.mjs')
 
 const app = express()
 const port = 3000
+app.use(express.json())
+
+nftStorageClient = new NFTStorage({ token: process.env.NFT_STORAGE_API_KEY })
 
 // Healthcheck
 app.get('/health', (req, res) => {
@@ -17,20 +23,36 @@ app.get('/health', (req, res) => {
     res.status(200).send(data);
 })
 
+// Root stuff
 app.get('/', (req, res) => {
     res.send('Welcome to our Homepage!')
 })
 
-app.get('/generate', (req, res) => {
+// POST /generate/name/description with formData body 
+app.post('/generate/:name/:description', (req, res) => {
     nftName = req.params.name
-    description = req.body
-    metadataURL = storeAsset(nftName, description) //Uses NFT.Storage API to store on Filecoin
+    description = req.params.description
+    // TODO call generate endpoint
+    image = null
+    metadataURL = storeAsset(nftName, description, image, nftStorageClient) //Uses NFT.Storage API to store on Filecoin
+    if (metadataURL != null) {
+        res.send(metadataURL)
+    }
+})
+
+app.post('/upload/:name/:description', (req, res) => {
+    nftName = req.params.name
+    description = req.params.description
+    // TODO semantics of file upload
+    image = new File([req.body], nftName, {type: 'image'})
+    metadataURL = storeAsset(nftName, description, image, nftStorageClient) //Uses NFT.Storage API to store on Filecoin
     if (metadataURL != null) {
         res.send(metadataURL)
     }
     
 })
 
+// Deploys a smart contract to chain
 app.get('/deploy', (req, res) => {
     // Costs some money
     address = deployContract(req.params.name)
@@ -39,6 +61,7 @@ app.get('/deploy', (req, res) => {
     }
 })
 
+// Calls smart contract mint method
 app.get('/mint', (req, res) => {
     // Costs some money
     contractName = null //contract name that the user wants
@@ -48,6 +71,7 @@ app.get('/mint', (req, res) => {
     res.status(200).send("NFT Minted")
 })
 
+// Calls smart contract airdrop method
 app.get('/airdrop', (req, res) => {
     // Costs some money
     contractName = null //contract name that the user wants
@@ -58,6 +82,23 @@ app.get('/airdrop', (req, res) => {
     res.status(200).send("NFT Minted")
 })
 
+// Deploys a smart contract to chain
+app.get('/display/:address', (req, res) => {
+    // Costs some money
+    displayNFT(req.params.address, )
+    if (address != null) {
+        res.status(200).send("NFT Contract Deployed")
+    }
+})
+
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`)
 })
+
+const initServer = async () => {
+    await Moralis.start({
+        apiKey: process.env.MORALIS_API_KEY
+    })
+}
+
+initServer()
