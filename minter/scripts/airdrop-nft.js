@@ -1,4 +1,4 @@
-import {mintNFT} from "./mint-nft.js"
+const mintNFT = require('../scripts/mint-nft.js')
 
 async function airdropNFT(contractName, contractAddress, metaDataURL, recevierAddresses) {
 
