@@ -1,3 +1,5 @@
+const { NFTStorage, File } = require('nft.storage')
+
 async function storeAsset(nftName, description, image, nftStorageClient) {
    const metadata = await nftStorageClient.store({
        name: nftName,
@@ -8,11 +10,11 @@ async function storeAsset(nftName, description, image, nftStorageClient) {
    return metadata.url
 }
 
-storeAsset("MyNFT", "My random NFT!")
-   .then(() => process.exit(0))
-   .catch((error) => {
-       console.error(error);
-       process.exit(1);
-   });
+// storeAsset("MyNFT", "My random NFT!", "image", new NFTStorage({ token: process.env.NFT_STORAGE_API_KEY }))
+//    .then(() => process.exit(0))
+//    .catch((error) => {
+//        console.error(error);
+//        process.exit(1);
+//    });
 
 module.exports = { storeAsset }

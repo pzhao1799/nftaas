@@ -1,11 +1,11 @@
 const Moralis = require('moralis').default
 const { NFTStorage, File } = require('nft.storage')
 const express = require('express')
-const mintNFT = require('../scripts/mint-nft.js')
-const airdropNFT = require('../scripts/airdrop-nft.js')
-const storeAsset = require('../scripts/store-asset.js')
-const deployContract = require('../scripts/deploy-contract.js')
-const displayNFT = require('../scripts/display-nft.js')
+const mintNFT = require('../scripts/mint-nft.js').mintNFT
+const airdropNFT = require('../scripts/airdrop-nft.js').airdropNFT
+const storeAsset = require('../scripts/store-asset.js').storeAsset
+const deployContract = require('../scripts/deploy-contract.js').deployContract
+const displayNFT = require('../scripts/display-nft.js').displayNFT
 
 const app = express()
 const port = 3000

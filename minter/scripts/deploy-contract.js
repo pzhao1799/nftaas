@@ -1,3 +1,5 @@
+const { ethers } = require("hardhat")
+
 async function deployContract(contractName) {
     const contractFactory = await ethers.getContractFactory(contractName)
     const contract = await contractFactory.deploy()
@@ -10,11 +12,11 @@ async function deployContract(contractName) {
     return contractAddress
 }
 
-deployContract("NFT")
-    .then(() => process.exit(0))
-    .catch((error) => {
-        console.error(error);
-        process.exit(1);
-    });
+// deployContract("NFT")
+//     .then(() => process.exit(0))
+//     .catch((error) => {
+//         console.error(error);
+//         process.exit(1);
+//     });
 
 module.exports = { deployContract }

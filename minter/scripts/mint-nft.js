@@ -12,11 +12,11 @@ async function mintNFT(contractName, contractAddress, metaDataURL, receiverAddre
     console.log("NFT minted to: ", receiver)
 }
 
-mintNFT(NFT_NAME, CONTRACT_ADDRESS, META_DATA_URL)
-   .then(() => process.exit(0))
-   .catch((error) => {
-       console.error(error);
-       process.exit(1);
-   });
+// mintNFT(NFT_NAME, CONTRACT_ADDRESS, META_DATA_URL)
+//    .then(() => process.exit(0))
+//    .catch((error) => {
+//        console.error(error);
+//        process.exit(1);
+//    });
 
 module.exports = { mintNFT }
