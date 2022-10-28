@@ -1,7 +1,7 @@
-import Moralis from 'moralis';
+const Moralis = require('moralis')
 
 // Displays all NFTs owned by an address on a specified chain
-export async function displayNFT(address, chain) {
+async function displayNFT(address, chain) {
     nfts = await Moralis.EvmApi.nft.getWalletNFTs({
         address,
         chain,
@@ -14,3 +14,5 @@ displayNFT("0x", "test")
         console.error(error);
         process.exit(1);
     });
+
+module.exports = { displayNFT }

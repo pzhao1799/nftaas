@@ -1,4 +1,4 @@
-export async function deployContract(contractName) {
+async function deployContract(contractName) {
     const contractFactory = await ethers.getContractFactory(contractName)
     const contract = await contractFactory.deploy()
     await contract.deployed()
@@ -16,3 +16,5 @@ deployContract("NFT")
         console.error(error);
         process.exit(1);
     });
+
+module.exports = { deployContract }

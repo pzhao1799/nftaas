@@ -1,4 +1,4 @@
-import {mintNFT} from "./mint-nft.mjs"
+import {mintNFT} from "./mint-nft.js"
 
 async function airdropNFT(contractName, contractAddress, metaDataURL, recevierAddresses) {
 
@@ -18,3 +18,5 @@ airdropNFT()
     console.error(error);
     process.exit(1);
   });
+
+module.exports = { airdropNFT }

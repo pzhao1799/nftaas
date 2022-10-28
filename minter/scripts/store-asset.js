@@ -1,7 +1,4 @@
-import { NFTStorage, File } from "nft.storage"
-import fs from 'fs'
-
-export async function storeAsset(nftName, description, image, nftStorageClient) {
+async function storeAsset(nftName, description, image, nftStorageClient) {
    const metadata = await nftStorageClient.store({
        name: nftName,
        description: description,
@@ -17,3 +14,5 @@ storeAsset("MyNFT", "My random NFT!")
        console.error(error);
        process.exit(1);
    });
+
+module.exports = { storeAsset }
