@@ -210,7 +210,6 @@ contract GiftCardNFT is
         );
 
         // Deduct the unwrap fees from the gift amount.
-        _totalFees += txFee;
         gift.amount -= txFee;
 
         _unwrapGiftCardAndDisburse(gift, owner);
