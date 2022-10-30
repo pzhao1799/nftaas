@@ -6,6 +6,7 @@ async function displayNFT(address, chain) {
         address,
         chain,
     })
+    return nfts
 }
 
 // displayNFT(0x93E7f6E488D76291663c6B11a0151E6a0a63ec74, "0x13881")

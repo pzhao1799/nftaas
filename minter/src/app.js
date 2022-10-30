@@ -1,7 +1,9 @@
 const Moralis = require('moralis').default
+const { EvmChain } = require('@moralisweb3/evm-utils')
 const { NFTStorage, File } = require('nft.storage')
 const express = require('express')
 const mintNFT = require('../scripts/mint-nft.js').mintNFT
+const safeMint = require('../scripts/mint-nft.js').safeMint
 const airdropNFT = require('../scripts/airdrop-nft.js').airdropNFT
 const storeAsset = require('../scripts/store-asset.js').storeAsset
 const deployContract = require('../scripts/deploy-contract.js').deployContract
@@ -12,6 +14,12 @@ const port = 3000
 app.use(express.json())
 
 nftStorageClient = new NFTStorage({ token: process.env.NFT_STORAGE_API_KEY })
+
+const chainMapping = {
+    "mumbai": EvmChain.MUMBAI,
+    "polygon": EvmChain.POLYGON,
+    "ethereum": EvmChain.ETHEREUM
+}
 
 // Healthcheck
 app.get('/health', (req, res) => {
@@ -62,12 +70,24 @@ app.get('/deploy', (req, res) => {
 })
 
 // Calls smart contract mint method
-app.get('/mint', (req, res) => {
+app.post('/mint', (req, res) => {
     // Costs some money
     contractName = null //contract name that the user wants
     contractAddress = null //contract address from /deploy
     metadataURL = null //the image metadata from /generate
     mintNFT(contractName, contractAddress, metadataURL)
+    res.status(200).send("NFT Minted")
+})
+
+// Calls smart contract safe mint method
+app.post('/safeMint', (req, res) => {
+    // Costs some money
+    contractName = null //contract name that the user wants
+    contractAddress = null //contract address from /deploy
+    metadataURL = null //the image metadata from /generate
+    valueAmount = null
+    message = null
+    safeMint(contractName, contractAddress, valueAmount, message, metadataURL)
     res.status(200).send("NFT Minted")
 })
 
@@ -83,16 +103,18 @@ app.get('/airdrop', (req, res) => {
 })
 
 // Deploys a smart contract to chain
-app.get('/display/:address', (req, res) => {
-    // Costs some money
-    displayNFT(req.params.address, )
-    if (address != null) {
-        res.status(200).send("NFT Contract Deployed")
+app.get('/display/:address/:chainName', (req, res) => {
+    nfts = null
+    if (req.params.chainName in chainMapping) {
+        nfts = displayNFT(req.params.address, chainMapping[req.params.chainName])
+    } else {
+        console.log("Incorrect chain")
     }
+    return nfts
 })
 
 app.listen(port, () => {
-  console.log(`Server listening on port ${port}`)
+    console.log(`Server listening on port ${port}`)
 })
 
 const initServer = async () => {
