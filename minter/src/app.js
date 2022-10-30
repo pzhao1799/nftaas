@@ -70,23 +70,25 @@ app.get('/deploy', (req, res) => {
 })
 
 // Calls smart contract mint method
+// request body contains all params
 app.post('/mint', (req, res) => {
     // Costs some money
-    contractName = null //contract name that the user wants
-    contractAddress = null //contract address from /deploy
-    metadataURL = null //the image metadata from /generate
+    contractName = req.body.contractName //contract name that the user wants
+    contractAddress = req.body.contractAddress //contract address from /deploy
+    metadataURL = req.body.metadataURL //the image metadata from /generate or /upload
     mintNFT(contractName, contractAddress, metadataURL)
     res.status(200).send("NFT Minted")
 })
 
 // Calls smart contract safe mint method
+// request body contains all params
 app.post('/safeMint', (req, res) => {
     // Costs some money
-    contractName = null //contract name that the user wants
-    contractAddress = null //contract address from /deploy
-    metadataURL = null //the image metadata from /generate
-    valueAmount = null
-    message = null
+    contractName = req.body.contractName //contract name that the user wants
+    contractAddress = req.body.contractAddress //contract address from /deploy
+    metadataURL = req.body.metadataURL //the image metadata from /generate or /upload
+    valueAmount = req.body.valueAmount
+    message = req.body.message
     safeMint(contractName, contractAddress, valueAmount, message, metadataURL)
     res.status(200).send("NFT Minted")
 })
@@ -94,12 +96,13 @@ app.post('/safeMint', (req, res) => {
 // Calls smart contract airdrop method
 app.get('/airdrop', (req, res) => {
     // Costs some money
+    body = res.json(req.body)
     contractName = null //contract name that the user wants
     contractAddresses = null //contract address from /deploy
     metadataURL = null //the image metadata from /generate
     receiverAddresses = req.body
     airdropNFT(contractName, contractAddress, metadataURL, receiverAddresses)
-    res.status(200).send("NFT Minted")
+    res.status(200).send("NFT Airdropped")
 })
 
 // Deploys a smart contract to chain
@@ -110,7 +113,7 @@ app.get('/display/:address/:chainName', (req, res) => {
     } else {
         console.log("Incorrect chain")
     }
-    return nfts
+    res.status(200).send(nfts)
 })
 
 app.listen(port, () => {
