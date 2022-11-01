@@ -9,5 +9,5 @@ curl -X POST http://localhost:3000/deploy -H 'Content-Type: application/json' -d
 curl -X POST http://localhost:3000/deploy?name=test
 curl -X POST http://localhost:3000/deploy?name=nft
 
-curl -H 'Content-Type: application/json' -d '{"name":"test","password":"xyz"}' -X POST http://localhost:3000/deploy
-curl -XPOST localhost:3000/deploy -d '{"name":"test"}' -H 'content-type: application/json'
+curl -H 'Content-Type:application/json' -d '{"name":"test"}' -X POST http://localhost:3000/deploy
+curl -XPOST localhost:3000/deploy -d '{"name":"test"}' -H 'content-type:application/json; charset=utf-8'

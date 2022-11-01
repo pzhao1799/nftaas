@@ -70,10 +70,11 @@ app.post('/deploy', (req, res) => {
     console.log(req.body);
     console.log(req.body.name);
     try {
-        address = deployContract('NFT');
-        if (address != null) {
-            res.status(200).send("NFT Contract Deployed")
-        }
+        deployContract('NFT').then((address) => {
+            if (address != null) {
+                res.status(200).send(`NFT Contract Deployed to: ${address}`);
+            }
+        }) ;
     } catch (err) {
         console.log(err);
     }
