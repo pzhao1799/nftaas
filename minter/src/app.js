@@ -1,4 +1,5 @@
 const Moralis = require('moralis').default
+const bodyParser = require('body-parser')
 const { EvmChain } = require('@moralisweb3/evm-utils')
 const { NFTStorage, File } = require('nft.storage')
 const express = require('express')
@@ -12,6 +13,8 @@ const displayNFT = require('../scripts/display-nft.js').displayNFT
 const app = express()
 const port = 3000
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }));
+
 
 nftStorageClient = new NFTStorage({ token: process.env.NFT_STORAGE_API_KEY })
 
@@ -61,11 +64,19 @@ app.post('/upload/:name/:description', (req, res) => {
 })
 
 // Deploys a smart contract to chain
-app.get('/deploy', (req, res) => {
+app.post('/deploy', (req, res) => {
     // Costs some money
-    address = deployContract(req.params.name)
-    if (address != null) {
-        res.status(200).send("NFT Contract Deployed")
+    console.log(req.params);
+    console.log(req.body);
+    console.log(req.body.name);
+    try {
+        wait().then()
+        address = deployContract('NFT');
+        if (address != null) {
+            res.status(200).send("NFT Contract Deployed")
+        }
+    } catch (err) {
+        console.log(err);
     }
 })
 
@@ -94,7 +105,7 @@ app.post('/safeMint', (req, res) => {
 })
 
 // Calls smart contract airdrop method
-app.get('/airdrop', (req, res) => {
+app.post('/airdrop', (req, res) => {
     // Costs some money
     body = res.json(req.body)
     contractName = null //contract name that the user wants
@@ -106,7 +117,7 @@ app.get('/airdrop', (req, res) => {
 })
 
 // Deploys a smart contract to chain
-app.get('/display/:address/:chainName', (req, res) => {
+app.post('/display/:address/:chainName', (req, res) => {
     nfts = null
     if (req.params.chainName in chainMapping) {
         nfts = displayNFT(req.params.address, chainMapping[req.params.chainName])

@@ -19,11 +19,11 @@ async function deployContract(contractName) {
 //         process.exit(1);
 //     });
 
-deployContract("GiftCardNFT")
-    .then(() => process.exit(0))
-    .catch((error) => {
-        console.error(error);
-        process.exit(1);
-    });
+// deployContract("GiftCardNFT")
+//     .then(() => process.exit(0))
+//     .catch((error) => {
+//         console.error(error);
+//         process.exit(1);
+//     });
 
 module.exports = { deployContract }
