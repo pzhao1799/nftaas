@@ -55,7 +55,7 @@ contract GiftCardNFT is
     constructor() initializer {}
 
     function initialize(string memory uri) public initializer {
-        __ERC721_init("Gift NFT Card", "GNFTCARD"); /// TODO: let people initialize the NFT with whatever naming they want
+        __ERC721_init(string giftCardName, string giftCardSymbol); /// TODO: let people initialize the NFT with whatever naming they want
         __ERC721Enumerable_init();
         __Ownable_init();
         __ERC721Burnable_init();
