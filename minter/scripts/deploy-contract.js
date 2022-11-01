@@ -1,8 +1,8 @@
 const { ethers } = require("hardhat")
 
-async function deployContract(contractName) {
+async function deployContract(contractName, nftName, nftSymbol) {
     const contractFactory = await ethers.getContractFactory(contractName)
-    const contract = await contractFactory.deploy()
+    const contract = await contractFactory.deploy(nftName, nftSymbol)
     await contract.deployed()
     // This solves the bug in Mumbai network where the contract address is not the real one
     const txHash = contract.deployTransaction.hash
