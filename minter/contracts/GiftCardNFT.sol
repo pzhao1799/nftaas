@@ -54,8 +54,8 @@ contract GiftCardNFT is
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() initializer {}
 
-    function initialize(string memory uri) public initializer {
-        __ERC721_init(string giftCardName, string giftCardSymbol); /// TODO: let people initialize the NFT with whatever naming they want
+    function initialize(string memory uri, string memory giftCardName, string memory giftCardSymbol) public initializer {
+        __ERC721_init(giftCardName, giftCardSymbol); /// TODO: let people initialize the NFT with whatever naming they want
         __ERC721Enumerable_init();
         __Ownable_init();
         __ERC721Burnable_init();

@@ -66,11 +66,11 @@ app.post('/upload/:name/:description', (req, res) => {
 // Deploys a smart contract to chain
 app.post('/deploy', (req, res) => {
     // Costs some money
-    console.log(req.params);
-    console.log(req.body);
-    console.log(req.body.name);
+    const name = req.body.name;
+    const symbol = req.body.symbol;
+
     try {
-        deployContract('NFT').then((address) => {
+        deployContract('NFT', name, symbol).then((address) => {
             if (address != null) {
                 res.status(200).send(`NFT Contract Deployed to: ${address}`);
             }
