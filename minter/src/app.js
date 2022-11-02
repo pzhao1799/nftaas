@@ -87,7 +87,8 @@ app.post('/mint', (req, res) => {
     contractName = req.body.contractName //contract name that the user wants
     contractAddress = req.body.contractAddress //contract address from /deploy
     metadataURL = req.body.metadataURL //the image metadata from /generate or /upload
-    mintNFT(contractName, contractAddress, metadataURL)
+    console.log(req.body)
+    mintNFT('NFT', contractAddress, metadataURL)
     res.status(200).send("NFT Minted")
 })
 
