@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 8080",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 8080",
     "lint": "next lint"
   },
   "dependencies": {
@@ -13,15 +13,18 @@
     "@thumbtack/thumbprint-react": "^14.13.1",
     "@types/react": "^18.0.21",
     "axios": "^1.1.3",
+    "ethers": "^5.7.2",
     "mime": "^3.0.0",
     "next": "12.3.1",
+    "next-auth": "^4.15.0",
     "next-transpile-modules": "^9.1.0",
     "nft.storage": "^7.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.6.0",
     "react-images-uploading": "^3.1.7",
-    "sass": "^1.55.0"
+    "sass": "^1.55.0",
+    "wagmi": "^0.7.9"
   },
   "devDependencies": {
     "@types/node": "18.11.2",
