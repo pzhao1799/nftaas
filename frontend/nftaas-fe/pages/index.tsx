@@ -13,6 +13,10 @@ const Home: NextPage = () => {
               <Link href="/image-upload">
                   <a>Try uploading an image</a>
               </Link>
+
+              <Link href="/signin">
+                  <a>Web3 Authentication</a>
+              </Link>
           </div>
 
           <footer className={styles.footer}>
