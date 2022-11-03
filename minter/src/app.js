@@ -1,8 +1,10 @@
+require('dotenv').config();
 const Moralis = require('moralis').default
 const bodyParser = require('body-parser')
 const { EvmChain } = require('@moralisweb3/evm-utils')
 const { NFTStorage, File } = require('nft.storage')
 const express = require('express')
+const cors = require('cors')
 const mintNFT = require('../scripts/mint-nft.js').mintNFT
 const safeMint = require('../scripts/mint-nft.js').safeMint
 const transferFrom = require('../scripts/mint-nft.js').transferFrom
@@ -12,12 +14,20 @@ const storeAsset = require('../scripts/store-asset.js').storeAsset
 const deployContract = require('../scripts/deploy-contract.js').deployContract
 const deployGiftCardContract = require('../scripts/deploy-contract.js').deployGiftCardContract
 const displayNFT = require('../scripts/display-nft.js').displayNFT
+const requestMessage = require('../scripts/auth/request-message.js').requestMessage
+const authorize = require('../scripts/auth/authorize.js').authorize
 
 const app = express()
 const port = 3000
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 
+app.options('*', cors())
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 
 nftStorageClient = new NFTStorage({ token: process.env.NFT_STORAGE_API_KEY })
 
@@ -169,6 +179,29 @@ app.post('/sendgift', (req, res) => {
     console.log(req.body)
     transferFrom('GiftCardNFT', contractAddress, targetAddress, tokenId);
 });
+
+// Request auth message from moralis
+app.post('/auth/request-message', (req, res) => {
+    console.log("Requesting a message");
+    requestMessage(req.body.address, req.body.chain, req.body.network)
+        .then((message) => {
+            res.status(200).send(message);
+        }).catch((error) => {
+            res.status(400).json({ error });
+        });
+})
+
+// Authorize using moralis
+app.post('/auth/authorize', (req, res) => {
+    console.log("Authorizing user");
+    authorize(req.body)
+        .then((user) => {
+            console.log("User authorized");
+            res.status(200).send(user)
+        }).catch((error) => {
+            res.status(400).json({ error });
+        });
+})
 
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`)
