@@ -24,6 +24,20 @@ async function safeMint(contractName, contractAddress, metaDataURL, value_amount
     console.log("NFT minted to: ", receiver, "with value: ", value_amount)
 }
 
+async function unwrapGiftCard(contractName, contractAddress, tokenId) {
+    const contractFactory = await ethers.getContractFactory(contractName)
+    // const [owner] = await ethers.getSigners()
+    await contractFactory.attach(contractAddress).unwrapGiftCard(tokenId);
+    console.log("Gift card nft unwrapped.")
+}
+
+async function transferFrom(contractName, contractAddress, targetAddress, tokenId) {
+    const contractFactory = await ethers.getContractFactory(contractName)
+    const [owner] = await ethers.getSigners()
+    await contractFactory.attach(contractAddress).transferFrom(owner.address, targetAddress, tokenId);
+    console.log("NFT transfered to: ", targetAddress)
+}
+
 // mintNFT(NFT_NAME, CONTRACT_ADDRESS, META_DATA_URL)
 //    .then(() => process.exit(0))
 //    .catch((error) => {
@@ -38,4 +52,4 @@ async function safeMint(contractName, contractAddress, metaDataURL, value_amount
 //        process.exit(1);
 //    });
 
-module.exports = { mintNFT, safeMint }
+module.exports = { mintNFT, safeMint, unwrapGiftCard, transferFrom }

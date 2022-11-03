@@ -5,9 +5,12 @@ const { NFTStorage, File } = require('nft.storage')
 const express = require('express')
 const mintNFT = require('../scripts/mint-nft.js').mintNFT
 const safeMint = require('../scripts/mint-nft.js').safeMint
+const transferFrom = require('../scripts/mint-nft.js').transferFrom
+const unwrapGiftCard = require('../scripts/mint-nft.js').unwrapGiftCard
 const airdropNFT = require('../scripts/airdrop-nft.js').airdropNFT
 const storeAsset = require('../scripts/store-asset.js').storeAsset
 const deployContract = require('../scripts/deploy-contract.js').deployContract
+const deployGiftCardContract = require('../scripts/deploy-contract.js').deployGiftCardContract
 const displayNFT = require('../scripts/display-nft.js').displayNFT
 
 const app = express()
@@ -92,19 +95,6 @@ app.post('/mint', (req, res) => {
     res.status(200).send("NFT Minted")
 })
 
-// Calls smart contract safe mint method
-// request body contains all params
-app.post('/safeMint', (req, res) => {
-    // Costs some money
-    contractName = req.body.contractName //contract name that the user wants
-    contractAddress = req.body.contractAddress //contract address from /deploy
-    metadataURL = req.body.metadataURL //the image metadata from /generate or /upload
-    valueAmount = req.body.valueAmount
-    message = req.body.message
-    safeMint(contractName, contractAddress, valueAmount, message, metadataURL)
-    res.status(200).send("NFT Minted")
-})
-
 // Calls smart contract airdrop method
 app.post('/airdrop', (req, res) => {
     // Costs some money
@@ -117,7 +107,7 @@ app.post('/airdrop', (req, res) => {
     res.status(200).send("NFT Airdropped")
 })
 
-// Deploys a smart contract to chain
+// Displays nfts
 app.post('/display/:address/:chainName', (req, res) => {
     nfts = null
     if (req.params.chainName in chainMapping) {
@@ -127,6 +117,58 @@ app.post('/display/:address/:chainName', (req, res) => {
     }
     res.status(200).send(nfts)
 })
+
+/**
+ * GIFT CARD NFT APIS
+ */
+
+// Deploys a smart contract to chain
+app.post('/deploygiftcard', (req, res) => {
+    // Costs some money
+    const name = req.body.name;
+    const symbol = req.body.symbol;
+
+    try {
+        // TODO: change this to our actual base site.
+        deployGiftCardContract('GiftCardNFT', 'https://test.com', name, symbol).then((address) => {
+            if (address != null) {
+                res.status(200).send(`NFT Contract Deployed to: ${address}`);
+            }
+        });
+    } catch (err) {
+        console.log(err);
+    }
+})
+
+// Calls smart contract safe mint method
+// request body contains all params
+app.post('/safemint', (req, res) => {
+    // Costs some money
+    contractAddress = req.body.contractAddress //contract address from /deploy
+    metadataURL = req.body.metadataURL //the image metadata from /generate or /upload
+    valueAmount = req.body.valueAmount
+    message = req.body.message
+    safeMint('GiftCardNFT', contractAddress, metadataURL, valueAmount, message)
+    res.status(200).send("NFT Minted")
+})
+
+// TODO: catch failure
+app.post('/unwrap', (req, res) => {
+    contractAddress = req.body.contractAddress //contract address from /deploy
+    tokenId = req.body.tokenId
+    console.log(req.body)
+    unwrapGiftCard('GiftCardNFT', contractAddress, tokenId);
+    res.status(200).send("Unwrapped gift card")
+})
+
+// TODO: write the transfer function
+app.post('/sendgift', (req, res) => {
+    tokenId = req.body.tokenId
+    targetAddress = req.body.targetAddress
+    contractAddress = req.body.contractAddress
+    console.log(req.body)
+    transferFrom('GiftCardNFT', contractAddress, targetAddress, tokenId);
+});
 
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`)
