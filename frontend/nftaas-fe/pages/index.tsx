@@ -17,6 +17,10 @@ const Home: NextPage = () => {
               <Link href="/signin">
                   <a>Web3 Authentication</a>
               </Link>
+
+              <Link href="/gift-card">
+                  <a>Create Gift Card</a>
+              </Link>
           </div>
 
           <footer className={styles.footer}>
