@@ -1,8 +1,14 @@
 import type { NextPage } from 'next'
 import Link from 'next/link'
+import ConnectWallet from '../components/ConnectWallet'
+import MintView from '../components/MintView'
 import styles from '../styles/Home.module.css'
+import { useCallback } from 'react';
+import { useAccount } from '../store/account';
 
 const Home: NextPage = () => {
+    const accountId = useAccount(useCallback((state) => state.accountId, []));
+
   return (
       <div className={styles.container}>
           <div className="w-100 flex pa5 justify-between">
@@ -21,6 +27,7 @@ const Home: NextPage = () => {
               <Link href="/gift-card">
                   <a>Create Gift Card</a>
               </Link>
+              {accountId ? accountId : <ConnectWallet />}
           </div>
 
           <footer className={styles.footer}>
