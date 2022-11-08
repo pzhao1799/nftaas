@@ -79,7 +79,7 @@ import {
           await mintGiftCard({
             signedBy: state.name,
             message: state.message,
-            amount: totalAmount.toString(),
+            amount: giftAmount.toString(),
             recipient: state.recipient,
             imageDataUrl,
           });
@@ -138,7 +138,7 @@ import {
                     >
                       <MdChevronLeft />
                     </IconButton>
-                    <GiftCard ref={giftCardRef} />
+                    {/* <GiftCard ref={giftCardRef} /> */}
                     <IconButton
                       onClick={onNextCard}
                       sx={{

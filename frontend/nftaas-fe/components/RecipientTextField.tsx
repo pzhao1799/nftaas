@@ -32,10 +32,6 @@ export default function RecipientTextField() {
       {...materialRegister(register, 'recipient')}
       label="Recipient Wallet"
       fullWidth
-      helperText={
-        errors.recipient?.message ??
-        'This is the wallet of the person who you want to send this gift card to.'
-      }
       error={!!errors.recipient}
       InputProps={{
         endAdornment: (

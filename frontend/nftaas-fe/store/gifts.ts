@@ -127,14 +127,14 @@ export function useMintGiftCard() {
       }
 
       // Upload the image to firebase storage and store it in the gift card nft.
-      const storage = getStorage(firebaseApp);
-      const filepath = `cards/${uuidv4()}`;
-      const imageRef = ref(storage, filepath);
-      await uploadString(imageRef, arg.imageDataUrl, StringFormat.DATA_URL);
-
+    //   const storage = getStorage(firebaseApp);
+    //   const filepath = `cards/${uuidv4()}`;
+    //   const imageRef = ref(storage, filepath);
+    //   await uploadString(imageRef, arg.imageDataUrl, StringFormat.DATA_URL);
+    // TODO: replace this with the IPFS url path
       const tx = await contract.safeMint(
         arg.recipient,
-        filepath,
+        'filepath',
         arg.message,
         arg.signedBy,
         // Send the following amount to be wrapped in the gift card.

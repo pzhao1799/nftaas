@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
-import config from 'utils/config';
-import { getMetamask } from 'utils/metamask';
-import { useAccount } from 'store/account';
+import config from '../utils/config';
+import { getMetamask } from '../utils/metamask';
+import { useAccount } from './account';
 
 /**
  * Add a network in metamask.

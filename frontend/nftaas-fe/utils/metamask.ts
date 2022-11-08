@@ -1,7 +1,7 @@
 import detectEthereumProvider from '@metamask/detect-provider';
 import { ethers } from 'ethers';
-import config from 'utils/config';
-import { useAccount } from 'store/account';
+import config from './config';
+import { useAccount } from '../store/account';
 
 /**
  * Gets metamask client.

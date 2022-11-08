@@ -7,7 +7,7 @@ import {
     Stack,
     Typography,
   } from '@mui/material';
-  import { GiftCard } from 'store/gifts';
+  import { GiftCard } from '../store/gifts';
   import {
     TelegramIcon,
     TelegramShareButton,
@@ -16,7 +16,7 @@ import {
     WhatsappIcon,
     WhatsappShareButton,
   } from 'react-share';
-  import { useOwnerOfNFT } from 'store/nft';
+  import { useOwnerOfNFT } from '../store/nft';
   
   type ShareDialogProps = {
     open: boolean;

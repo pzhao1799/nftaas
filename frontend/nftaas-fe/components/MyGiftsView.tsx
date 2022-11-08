@@ -1,10 +1,10 @@
-import Navigation from 'components/Navigation';
+// import Navigation from 'components/Navigation';
 import { Button, ButtonGroup } from '@mui/material';
 import { useCallback } from 'react';
-import MyGifts from 'components/MyGifts';
-import { useAccount } from 'store/account';
-import config from 'utils/config';
-import InvalidChain from 'components/InvalidChain';
+import MyGifts from './MyGifts';
+import { useAccount } from '../store/account';
+import config from '../utils/config';
+import InvalidChain from './InvalidChain';
 import Link from 'next/link';
 
 export default function MyGiftsView() {
@@ -20,7 +20,7 @@ export default function MyGiftsView() {
 
   return (
     <>
-      <Navigation>
+      {/* <Navigation> */}
         <ButtonGroup>
           <Link href="/" passHref>
             <Button component="a" variant="outlined">
@@ -33,7 +33,7 @@ export default function MyGiftsView() {
             </Button>
           </Link>
         </ButtonGroup>
-      </Navigation>
+      {/* </Navigation> */}
 
       {isValid ? <MyGifts /> : <InvalidChain />}
     </>
