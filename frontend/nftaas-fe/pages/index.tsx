@@ -1,26 +1,16 @@
 import type { NextPage } from 'next'
-import Link from 'next/link'
+import Image from 'next/image';
 import styles from '../styles/Home.module.css'
+import gif from '../public/home-page.gif'
+import GlobalHeader from '../components/global-header'
 
 const Home: NextPage = () => {
   return (
       <div className={styles.container}>
-          <div className="w-100 flex pa5 justify-between">
-              <div>
-                  Hello World
-              </div>
+          <GlobalHeader />
 
-              <Link href="/image-upload">
-                  <a>Try uploading an image</a>
-              </Link>
-
-              <Link href="/signin">
-                  <a>Web3 Authentication</a>
-              </Link>
-
-              <Link href="/gift-card">
-                  <a>Create Gift Card</a>
-              </Link>
+          <div className="w-100 flex pa5 justify-center">
+              <Image src={gif} alt={"home page gif"}/>
           </div>
 
           <footer className={styles.footer}>
