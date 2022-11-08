@@ -5,29 +5,20 @@ import MintView from '../components/MintView'
 import styles from '../styles/Home.module.css'
 import { useCallback } from 'react';
 import { useAccount } from '../store/account';
-
+import Image from 'next/image';
+import gif from '../public/home-page.gif';
+import GlobalHeader from '../components/global-header';
 const Home: NextPage = () => {
     const accountId = useAccount(useCallback((state) => state.accountId, []));
 
   return (
       <div className={styles.container}>
-          <div className="w-100 flex pa5 justify-between">
-              <div>
-                  Hello World
-              </div>
+          <GlobalHeader />
 
-              <Link href="/image-upload">
-                  <a>Try uploading an image</a>
-              </Link>
+          {accountId ? accountId : <ConnectWallet />}
 
-              <Link href="/signin">
-                  <a>Web3 Authentication</a>
-              </Link>
-
-              <Link href="/gift-card">
-                  <a>Create Gift Card</a>
-              </Link>
-              {accountId ? accountId : <ConnectWallet />}
+          <div className="w-100 flex pa5 justify-center">
+              <Image src={gif} alt={"home page gif"}/>
           </div>
 
           <footer className={styles.footer}>

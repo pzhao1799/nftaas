@@ -3,13 +3,13 @@ import { signIn } from 'next-auth/react';
 import { useAccount, useConnect, useSignMessage, useDisconnect } from 'wagmi';
 import { useRouter } from 'next/router';
 import axiosClient  from './axios-client';
+import { TextButton } from '@thumbtack/thumbprint-react';
 
-function SignIn() {
+export default function SignIn() {
     const { connectAsync } = useConnect();
     const { disconnectAsync } = useDisconnect();
     const { isConnected } = useAccount();
     const { signMessageAsync } = useSignMessage();
-    const { push } = useRouter();
 
     const handleAuth = async () => {
         //disconnects the web3 provider if it's already active
@@ -35,6 +35,7 @@ function SignIn() {
             'credentials',
             { message, signature, redirect: false, callbackUrl: '/user' },
         );
+
         /**
          * instead of using signIn(..., redirect: "/user")
          * we get the url from callback and push it to the router to avoid page refreshing
@@ -45,11 +46,10 @@ function SignIn() {
     };
 
     return (
-        <div>
-            <h3>Web3 Authentication</h3>
-            <button onClick={() => handleAuth()}>Authenticate via Metamask</button>
-        </div>
+        <TextButton
+            onClick={() => handleAuth()}
+        >
+            Connect Your Metamask Wallet
+        </TextButton>
     );
 }
-
-export default SignIn;

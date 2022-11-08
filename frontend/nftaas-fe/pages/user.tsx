@@ -1,37 +1,23 @@
-import { getSession, signOut } from 'next-auth/react';
+import {NextPage} from "next";
+import { useSession, signOut } from 'next-auth/react';
 
-// gets a prop from getServerSideProps
-function User({ user }: any) {
+const UserPage: NextPage = () => {
+    const { data: session, status } = useSession({
+        required: true,
+        onUnauthenticated() {
+            window.location.assign('/');
+        }
+    })
+
     return (
         <div>
             <h4>User session:</h4>
-            <pre>{JSON.stringify(user, null, 2)}</pre>
+            <pre>{JSON.stringify(session?.user, null, 2)}</pre>
             <button onClick={() => {
-                signOut({redirect: true})
-                    .then(() => {
-                        window.location.assign('/signin');
-                    })
+                signOut({redirect: false})
             }}>Sign out</button>
         </div>
-    );
+    )
 }
 
-export async function getServerSideProps(context: any) {
-    const session = await getSession(context);
-
-    // redirect if not authenticated
-    if (!session) {
-        return {
-            redirect: {
-                destination: '/signin',
-                permanent: false,
-            },
-        };
-    }
-
-    return {
-        props: { user: session.user },
-    };
-}
-
-export default User;
+export default UserPage;
