@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import {useState} from 'react';
 import ImageUploading from 'react-images-uploading';
-import { AlertBanner, Button, Modal, ModalContent, Text, TextButton } from '@thumbtack/thumbprint-react';
+import { Button, Modal, ModalContent, Text, TextButton } from '@thumbtack/thumbprint-react';
 import {ImageType} from "react-images-uploading/dist/typings";
 import {NFTStorage, CIDString} from 'nft.storage'
 import { FaFileImage, FaTrashAlt, FaWindowClose } from "react-icons/fa";

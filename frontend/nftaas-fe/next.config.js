@@ -5,6 +5,9 @@ const nextConfig = {
   ...withTM({}),
   reactStrictMode: true,
   swcMinify: true,
+  compiler: {
+    styledComponents: true
+  }
 };
 
 
