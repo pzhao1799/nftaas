@@ -8,6 +8,7 @@ import { useAccount } from '../store/account';
 import Image from 'next/image';
 import gif from '../public/home-page.gif';
 import GlobalHeader from '../components/global-header';
+
 const Home: NextPage = () => {
     const accountId = useAccount(useCallback((state) => state.accountId, []));
 
