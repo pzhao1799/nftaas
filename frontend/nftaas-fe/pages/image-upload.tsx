@@ -1,5 +1,6 @@
 import type { NextPage } from 'next'
 import {useState} from 'react';
+import Image from 'next/image'
 import ImageUploading from 'react-images-uploading';
 import { Button, Modal, ModalContent, Text, TextButton } from '@thumbtack/thumbprint-react';
 import {ImageType} from "react-images-uploading/dist/typings";
@@ -9,6 +10,9 @@ import { FaFileImage, FaTrashAlt, FaWindowClose } from "react-icons/fa";
 const NFT_STORAGE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDBmMzk1ZDRBN0NkQjU3ZTE2MjI4QzU0RUY0MkIwMjA4Mjc4MzA5N2UiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY2NjIyOTU3NDM5MCwibmFtZSI6Ik5GVGFhcyJ9.YQbmpvwiZr0UOWwGoBP6vkMRVjVllr0PUwXihyJneAs"
 const MAX_UPLOAD_ALLOWED = 99
 
+/**
+ * @deprecated Keeping it here for now
+ */
 const ImageUploadPage: NextPage = () => {
     const [images, setImages] = useState<ImageType[]>([]);
     const [cids, setCids] = useState<string[]>([]);
@@ -148,7 +152,7 @@ const ImageUploadPage: NextPage = () => {
                             }
                             {imageList.map((image, index) => (
                                 <div key={index} className="image-item mt2">
-                                    <img src={image['data_url']} alt="" width="100" />
+                                    <Image src={image['data_url']} alt='' height={120} width={120}/>
                                     <div className="image-item__btn-wrapper">
                                         <button
                                             className="mr1"
