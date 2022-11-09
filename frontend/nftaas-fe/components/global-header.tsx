@@ -4,12 +4,12 @@ import SignIn from "./signin-button";
 export default function GlobalHeader() {
     return (
         <div className="w-100 flex pa5 justify-between">
-            <div>
-                Home
-            </div>
+            <Link href="/">
+                <a>Home</a>
+            </Link>
 
-            <Link href="/image-upload">
-                <a>Upload images</a>
+            <Link href="/create-nft">
+                <a>Create Your NFT Collection</a>
             </Link>
 
             <Link href="/gift-card">
