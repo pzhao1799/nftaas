@@ -1,19 +1,11 @@
 import type { NextPage } from 'next'
-import ConnectWallet from '../components/ConnectWallet'
-import MintView from '../components/MintView'
 import styles from '../styles/Home.module.css'
-import { useCallback } from 'react';
-import { useAccount } from '../store/account';
 import Image from 'next/image';
 import gif from '../public/home-page.gif';
 
 const Home: NextPage = () => {
-    const accountId = useAccount(useCallback((state) => state.accountId, []));
-
   return (
       <div className={styles.container}>
-          {accountId ? accountId : <ConnectWallet />}
-
           <div className="w-100 flex pa5 justify-center">
               <Image src={gif} alt={"home page gif"}/>
           </div>

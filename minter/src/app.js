@@ -108,11 +108,10 @@ app.post('/mint', (req, res) => {
 // Calls smart contract airdrop method
 app.post('/airdrop', (req, res) => {
     // Costs some money
-    body = res.json(req.body)
-    contractName = null //contract name that the user wants
-    contractAddresses = null //contract address from /deploy
-    metadataURL = null //the image metadata from /generate
-    receiverAddresses = req.body
+    contractName = req.body.contractName //contract name that the user wants
+    contractAddress = req.body.contractAddress //contract address from /deploy
+    metadataURL = req.body.metadataURL //the image metadata from /generate
+    receiverAddresses = req.body.receiverAddresses
     airdropNFT(contractName, contractAddress, metadataURL, receiverAddresses)
     res.status(200).send("NFT Airdropped")
 })
