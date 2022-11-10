@@ -76,20 +76,37 @@ const CreateNFTPage: NextPage = () => {
                 images.forEach(
                     (img: ImageType, index): void => {
                         if (!!img.file) {
-                            nftStorageClient.storeBlob(img.file)
-                                .then((cid: CIDString) => {
-                                    const receiverAddress = addresses.get(index)
-                                    if (!!receiverAddress) {
-                                        console.log("Airdropping NFT ", cid);
-                                        airdropNFT(cid, address, receiverAddress);
-                                    } else {
-                                        console.log("Minting NFT ", cid);
-                                        mintNFT(cid, address);
-                                    }
-                                })
-                                .catch((err) => {
-                                    console.log(err);
-                                });
+                            nftStorageClient.store({
+                                name: 'ExampleNFT',
+                                description: 'My ExampleNFT is an awesome artwork!',
+                                image: img.file,
+                            }).then((resp) => {
+                                const receiverAddress = addresses.get(index)
+                                const url = resp.url
+                                if (!!receiverAddress) {
+                                    console.log("Airdropping NFT ", url);
+                                    airdropNFT(url, address, receiverAddress);
+                                } else {
+                                    console.log("Minting NFT ", url);
+                                    mintNFT(url, address);
+                                }
+                            }).catch((err) => {
+                                console.log(err);
+                            });
+                            // nftStorageClient.storeBlob(img.file)
+                            //     .then((cid: CIDString) => {
+                            //         const receiverAddress = addresses.get(index)
+                            //         if (!!receiverAddress) {
+                            //             console.log("Airdropping NFT ", cid);
+                            //             airdropNFT(cid, address, receiverAddress);
+                            //         } else {
+                            //             console.log("Minting NFT ", cid);
+                            //             mintNFT(cid, address);
+                            //         }
+                            //     })
+                            //     .catch((err) => {
+                            //         console.log(err);
+                            //     });
                         }
                     }
                 );
