@@ -17,7 +17,7 @@ const GiftCardPage: NextPage = () => {
     const [contractName, setContractName] = useState<string | undefined>(undefined);
     const [symbol, setSymbol] = useState<string | undefined>(undefined);
     const [amount, setAmount] = useState<string | undefined>(undefined);
-    const [recipientAddress, setRecipientAddress] = useState<string | undefined>(undefined);
+    const [message, setMessage] = useState<string | undefined>(undefined);
 
     const nftStorageClient = new NFTStorage({ token: NFT_STORAGE_KEY });
 
@@ -70,7 +70,7 @@ const GiftCardPage: NextPage = () => {
             contractAddress: address,
             metadataURL: `ipfs://${cid}`,
             valueAmount: amount,
-            receiverAddresses: recipientAddress
+            message: message
         };
         await axiosClient.post('/safemint', mintData, {
             headers: {
@@ -181,12 +181,12 @@ const GiftCardPage: NextPage = () => {
 
             <div className="w-100 flex justify-center">
                 <div className="w6 mt3">
-                    <Text className="white">Recipient Address</Text>
+                    <Text className="white">Message</Text>
                     <TextInput
-                        hasError={!recipientAddress}
-                        value={recipientAddress}
-                        placeholder="recipient address"
-                        onChange={setRecipientAddress}
+                        hasError={!message}
+                        value={message}
+                        placeholder="message"
+                        onChange={setMessage}
                     />
                     {
                         !symbol && (

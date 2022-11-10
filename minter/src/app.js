@@ -133,10 +133,11 @@ app.post('/display/:address/:chainName', (req, res) => {
 
 // Deploys a smart contract to chain
 app.post('/deploygiftcard', (req, res) => {
+    console.log(req);
+
     // Costs some money
     const name = req.body.name;
     const symbol = req.body.symbol;
-
     try {
         // TODO: change this to our actual base site.
         deployGiftCardContract('GiftCardNFT', 'https://test.com', name, symbol).then((address) => {
@@ -155,8 +156,8 @@ app.post('/safemint', (req, res) => {
     // Costs some money
     contractAddress = req.body.contractAddress //contract address from /deploy
     metadataURL = req.body.metadataURL //the image metadata from /generate or /upload
-    valueAmount = req.body.valueAmount
-    message = req.body.message
+    valueAmount = req.body.valueAmount // The amount
+    message = req.body.message // the message on the card
     safeMint('GiftCardNFT', contractAddress, metadataURL, valueAmount, message)
     res.status(200).send("NFT Minted")
 })

@@ -20,6 +20,7 @@ async function safeMint(contractName, contractAddress, metaDataURL, value_amount
     const options = {value: ethers.utils.parseEther(value_amount)}
     const [owner] = await ethers.getSigners()
     receiver = receiverAddress ?? owner.address
+    console.log(receiver);
     await contractFactory.attach(contractAddress).safeMint(receiver, metaDataURL, message, owner.address, options)
     console.log("NFT minted to: ", receiver, "with value: ", value_amount)
 }

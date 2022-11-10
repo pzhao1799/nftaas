@@ -8,7 +8,6 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 
-/// @custom:security-contact pepsighan@sharadchand.com
 contract GiftCardNFT is
     Initializable,
     ERC721Upgradeable,
@@ -52,7 +51,7 @@ contract GiftCardNFT is
     mapping(address => uint256[]) private _sentGifts;
 
     /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor() initializer {}
+    constructor(string memory uri, string memory giftCardName, string memory giftCardSymbol) initializer {}
 
     function initialize(string memory uri, string memory giftCardName, string memory giftCardSymbol) public initializer {
         __ERC721_init(giftCardName, giftCardSymbol); /// TODO: let people initialize the NFT with whatever naming they want
