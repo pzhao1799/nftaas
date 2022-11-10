@@ -16,6 +16,8 @@ const deployGiftCardContract = require('../scripts/deploy-contract.js').deployGi
 const displayNFT = require('../scripts/display-nft.js').displayNFT
 const requestMessage = require('../scripts/auth/request-message.js').requestMessage
 const authorize = require('../scripts/auth/authorize.js').authorize
+const https = require("https");
+const fs = request("fs");
 
 const app = express()
 const port = 3000
@@ -203,8 +205,32 @@ app.post('/auth/authorize', (req, res) => {
         });
 })
 
-app.listen(port, () => {
-    console.log(`Server listening on port ${port}`)
+// app.listen(port, () => {
+//     console.log(`Server listening on port ${port}`)
+// })
+
+
+// Create a NodeJS HTTPS listener on port 3443 that points to the Express app
+// Use a callback function to tell when the server is created.
+https
+  .createServer(
+    		// Provide the private and public key to the server by reading each
+		// file's content with the readFileSync() method.
+        {
+            key: fs.readFileSync("key.pem"),
+            cert: fs.readFileSync("cert.pem"),
+          },
+          app
+  )
+  .listen(3443, ()=>{
+    console.log('server is runing at port 3443')
+  });
+
+// Create an try point route for the Express app listening on port 3443.
+// This code tells the service to listed to any request coming to the / route.
+// Once the request is received, it will display a message "Hello from express server."
+app.get('/', (req, res)=>{
+    res.send("Hello from express server.")
 })
 
 const initServer = async () => {
