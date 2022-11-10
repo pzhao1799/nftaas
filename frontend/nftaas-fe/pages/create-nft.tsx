@@ -2,25 +2,63 @@ import type { NextPage } from 'next'
 import {useState} from 'react';
 import Image from 'next/image'
 import ImageUploading from 'react-images-uploading';
-import { Button, Text, TextInput, Label } from '@thumbtack/thumbprint-react';
+import { Button, Text, TextInput, Checkbox } from '@thumbtack/thumbprint-react';
 import {ImageType} from "react-images-uploading/dist/typings";
 import {NFTStorage, CIDString} from 'nft.storage'
 import axiosClient from '../utils/axios-client';
+import autoGenerateClient from '../utils/generate-art-client';
 
 const NFT_STORAGE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDBmMzk1ZDRBN0NkQjU3ZTE2MjI4QzU0RUY0MkIwMjA4Mjc4MzA5N2UiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY2NjIyOTU3NDM5MCwibmFtZSI6Ik5GVGFhcyJ9.YQbmpvwiZr0UOWwGoBP6vkMRVjVllr0PUwXihyJneAs"
 const MAX_UPLOAD_ALLOWED = 99
 
 const CreateNFTPage: NextPage = () => {
+    const [isUploadMode, setIsUploadMode] = useState<boolean>(true);
     const [images, setImages] = useState<ImageType[]>([]);
     const [addresses, setAddresses] = useState<Map<number, string>>(new Map<number, string>());
     const [isMakingNetworkCall, setIsMakingNetworkCall] = useState<boolean>(false);
     const [contractName, setContractName] = useState<string | undefined>(undefined);
     const [symbol, setSymbol] = useState<string | undefined>(undefined);
+    const [numNFT, setNumNFT] = useState<number>(1);
 
     const nftStorageClient = new NFTStorage({ token: NFT_STORAGE_KEY });
 
     const onChange = (imageList: ImageType[]) => {
         setImages(imageList);
+    };
+
+    const generateArt = async () => {
+        return await autoGenerateClient.post(`/nfts/`, {}, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+    };
+
+    const autoGenNFTs = async (num: number) => {
+        setIsMakingNetworkCall(true);
+
+        await deployContract()
+            .then((resp) => {
+                const address = resp.data;
+                console.log("Contract deployed to: ", address);
+                for (let i = 0; i < numNFT; i++) {
+                    generateArt()
+                        .then(
+                            (resp) => {
+                                const cid = resp.data;
+                                console.log("minting NFT for generated art: ", cid);
+                                mintNFT(cid, address);
+                            }
+                        )
+                        .catch((e) => {
+                            alert(e.message)
+                        });
+                }
+            }).catch((e) => {
+                alert(e);
+            }).finally((): void => {
+                reset();
+            });
     };
 
     const mintNFTs = async () => {
@@ -66,7 +104,7 @@ const CreateNFTPage: NextPage = () => {
         const mintData = {
             contractName: contractName,
             contractAddress: address,
-            metadataURL: `ipfs://${cid}`,
+            metadataURL: `https://ipfs.io/ipfs/${cid}`,
         };
         await axiosClient.post('/mint', mintData, {
             headers: {
@@ -124,8 +162,13 @@ const CreateNFTPage: NextPage = () => {
 
     return (
         <div className="w-100 h6 pa3 black pb5">
-            <div className="w-100 flex justify-center">
+            <div className="w-100 flex justify-center white">
                 <div className="w6">
+                    <div className="mb3">
+                        <Checkbox isChecked={!isUploadMode} onChange={() => setIsUploadMode(!isUploadMode)}>
+                            Use auto-generated images
+                        </Checkbox>
+                    </div>
                     <Text className="white">Contract Name</Text>
                     <TextInput
                         hasError={!contractName}
@@ -158,100 +201,136 @@ const CreateNFTPage: NextPage = () => {
                 </div>
             </div>
 
-            <div className="w-100 flex justify-center mt5">
-                <ImageUploading
-                    multiple
-                    value={images}
-                    onChange={onChange}
-                    maxNumber={MAX_UPLOAD_ALLOWED}
-                    dataURLKey="data_url"
-                >
-                    {({
-                          imageList,
-                          onImageUpload,
-                          onImageRemoveAll,
-                          onImageUpdate,
-                          onImageRemove,
-                          isDragging,
-                          dragProps,
-                      }) => (
-                        // write your building UI
-                        <div className="upload__image-wrapper">
-                            <div className="flex">
-                                <button
-                                    className="mr1"
-                                    style={isDragging ? { color: 'red' } : undefined}
-                                    onClick={onImageUpload}
-                                    {...dragProps}
-                                >
-                                    Click or Drop images here
-                                </button>
-                                {
-                                    imageList.length > 1 && (
-                                        <div>
-                                            <button onClick={onImageRemoveAll}>
-                                                Remove all images
-                                            </button>
-                                        </div>
-                                    )
-                                }
-                            </div>
-                            {
-                                imageList.length > 1 && (
-                                    <div>
-                                        <Text className="white">
-                                            Send each NFT to a separate address or create them in our wallet if unspecified
-                                        </Text>
-                                    </div>
-                                )
-                            }
-                            {imageList.map((image, index) => (
-                                <div key={index} className="image-item mt2 flex">
-                                    <div>
-                                        <Image src={image['data_url']} alt='' height={120} width={120}/>
-                                        <div className="image-item__btn-wrapper flex">
+            {
+                isUploadMode && (
+                    <div>
+                        <div className="w-100 flex justify-center mt5">
+                            <ImageUploading
+                                multiple
+                                value={images}
+                                onChange={onChange}
+                                maxNumber={MAX_UPLOAD_ALLOWED}
+                                dataURLKey="data_url"
+                            >
+                                {({
+                                      imageList,
+                                      onImageUpload,
+                                      onImageRemoveAll,
+                                      onImageUpdate,
+                                      onImageRemove,
+                                      isDragging,
+                                      dragProps,
+                                  }) => (
+                                    <div className="upload__image-wrapper">
+                                        <div className="flex">
                                             <button
                                                 className="mr1"
-                                                onClick={() => onImageUpdate(index)}
+                                                style={isDragging ? { color: 'red' } : undefined}
+                                                onClick={onImageUpload}
+                                                {...dragProps}
                                             >
-                                                Update
+                                                Click or Drop images here
                                             </button>
-                                            <button
-                                                onClick={() => onImageRemove(index)}
-                                            >
-                                                Remove
-                                            </button>
+                                            {
+                                                imageList.length > 1 && (
+                                                    <div>
+                                                        <button onClick={onImageRemoveAll}>
+                                                            Remove all images
+                                                        </button>
+                                                    </div>
+                                                )
+                                            }
                                         </div>
+                                        {
+                                            imageList.length > 1 && (
+                                                <div>
+                                                    <Text className="white">
+                                                        Send each NFT to a separate address or create them in our wallet if unspecified
+                                                    </Text>
+                                                </div>
+                                            )
+                                        }
+                                        {imageList.map((image, index) => (
+                                            <div key={index} className="image-item mt2 flex">
+                                                <div>
+                                                    <Image src={image['data_url']} alt='' height={120} width={120}/>
+                                                    <div className="image-item__btn-wrapper flex">
+                                                        <button
+                                                            className="mr1"
+                                                            onClick={() => onImageUpdate(index)}
+                                                        >
+                                                            Update
+                                                        </button>
+                                                        <button
+                                                            onClick={() => onImageRemove(index)}
+                                                        >
+                                                            Remove
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div className="ml2">
+                                                    <TextInput
+                                                        value={addresses.get(index) ?? undefined}
+                                                        placeholder="0xABCD1234"
+                                                        onChange={(value) => {
+                                                            let newAddresses = new Map(addresses)
+                                                            newAddresses.set(index, value)
+                                                            setAddresses(newAddresses)
+                                                        }}
+                                                    />
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
-                                    <div className="ml2">
-                                        <TextInput
-                                            value={addresses.get(index) ?? undefined}
-                                            placeholder="0xABCD1234"
-                                            onChange={(value) => {
-                                                let newAddresses = new Map(addresses)
-                                                newAddresses.set(index, value)
-                                                setAddresses(newAddresses)
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-                            ))}
+                                )}
+                            </ImageUploading>
                         </div>
-                    )}
-                </ImageUploading>
-            </div>
+                        {
+                            images.length > 0 && !!contractName && symbol &&
+                            (<div className="w-100 flex justify-center mt5">
+                                <Button
+                                    theme="tertiary"
+                                    onClick={mintNFTs}
+                                    isDisabled={isMakingNetworkCall}
+                                >
+                                    Create your NFT collection!
+                                </Button>
+                            </div>)
+                        }
+                    </div>
+                )
+            }
 
             {
-                images.length > 0 && !!contractName && symbol &&
-                    (<div className="w-100 flex justify-center mt5">
-                        <Button
-                            theme="tertiary"
-                            onClick={mintNFTs}
-                            isDisabled={isMakingNetworkCall}
-                        >
-                            Create your NFT collection!
-                        </Button>
-                    </div>)
+                !isUploadMode && (
+                    <div className="mt3">
+                        <div className="flex justify-center">
+                            <div className="w6 white">
+                                <Text>How many NFTs?</Text>
+                                <TextInput
+                                    value={numNFT}
+                                    type='number'
+                                    min={1}
+                                    onChange={(value) => {
+                                        setNumNFT(Number(value))
+                                    }}
+                                />
+                            </div>
+                        </div>
+                        {
+                            !!contractName && symbol &&
+                            (<div className="w-100 flex justify-center mt5">
+                                <Button
+                                    theme="tertiary"
+                                    onClick={() => autoGenNFTs(numNFT)}
+                                    isDisabled={isMakingNetworkCall}
+                                >
+                                    Auto-generate your NFT collection!
+                                </Button>
+                            </div>)
+                        }
+                    </div>
+                )
             }
         </div>
     )
