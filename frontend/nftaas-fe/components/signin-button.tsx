@@ -3,6 +3,8 @@ import { signIn } from 'next-auth/react';
 import { useAccount, useConnect, useSignMessage, useDisconnect } from 'wagmi';
 import axiosClient from '../utils/axios-client';
 import { TextButton } from '@thumbtack/thumbprint-react';
+import MetaMask from "../public/metamask.png";
+import Image from "next/image";
 
 export default function SignIn() {
     const { connectAsync } = useConnect();
@@ -45,10 +47,15 @@ export default function SignIn() {
     };
 
     return (
-        <TextButton
-            onClick={() => handleAuth()}
-        >
-            Connect Your Metamask Wallet
-        </TextButton>
+        <div className="flex v-mid">
+            <Image src={MetaMask} width={20} height={20}/>
+            <div className="ml2">
+                <TextButton
+                    onClick={() => handleAuth()}
+                >
+                    Connect Metamask Wallet
+                </TextButton>
+            </div>
+        </div>
     );
 }
