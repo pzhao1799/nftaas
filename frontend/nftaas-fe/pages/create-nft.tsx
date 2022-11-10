@@ -4,9 +4,10 @@ import Image from 'next/image'
 import ImageUploading from 'react-images-uploading';
 import { Button, Text, TextInput, Checkbox } from '@thumbtack/thumbprint-react';
 import {ImageType} from "react-images-uploading/dist/typings";
-import {NFTStorage, CIDString} from 'nft.storage'
+import {NFTStorage} from 'nft.storage'
 import axiosClient from '../utils/axios-client';
 import autoGenerateClient from '../utils/generate-art-client';
+import loading from "../public/loading.gif";
 
 const NFT_STORAGE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDBmMzk1ZDRBN0NkQjU3ZTE2MjI4QzU0RUY0MkIwMjA4Mjc4MzA5N2UiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY2NjIyOTU3NDM5MCwibmFtZSI6Ik5GVGFhcyJ9.YQbmpvwiZr0UOWwGoBP6vkMRVjVllr0PUwXihyJneAs"
 const MAX_UPLOAD_ALLOWED = 99
@@ -15,7 +16,10 @@ const CreateNFTPage: NextPage = () => {
     const [isUploadMode, setIsUploadMode] = useState<boolean>(true);
     const [images, setImages] = useState<ImageType[]>([]);
     const [addresses, setAddresses] = useState<Map<number, string>>(new Map<number, string>());
+    const [names, setNames] = useState<Map<number, string>>(new Map<number, string>());
+    const [descriptions, setDescriptions] = useState<Map<number, string>>(new Map<number, string>());
     const [isMakingNetworkCall, setIsMakingNetworkCall] = useState<boolean>(false);
+
     const [contractName, setContractName] = useState<string | undefined>(undefined);
     const [symbol, setSymbol] = useState<string | undefined>(undefined);
     const [numNFT, setNumNFT] = useState<number>(1);
@@ -77,8 +81,8 @@ const CreateNFTPage: NextPage = () => {
                     (img: ImageType, index): void => {
                         if (!!img.file) {
                             nftStorageClient.store({
-                                name: 'ExampleNFT',
-                                description: 'My ExampleNFT is an awesome artwork!',
+                                name: names.get(index) ?? "NFT",
+                                description:  descriptions.get(index) ?? "This is a great NFT.",
                                 image: img.file,
                             }).then((resp) => {
                                 const receiverAddress = addresses.get(index)
@@ -117,11 +121,11 @@ const CreateNFTPage: NextPage = () => {
             });
     };
 
-    const mintNFT = async (cid: string, address: string) => {
+    const mintNFT = async (url: string, address: string) => {
         const mintData = {
             contractName: contractName,
             contractAddress: address,
-            metadataURL: `https://ipfs.io/ipfs/${cid}`,
+            metadataURL: url,
         };
         await axiosClient.post('/mint', mintData, {
             headers: {
@@ -134,11 +138,11 @@ const CreateNFTPage: NextPage = () => {
         );
     };
 
-    const airdropNFT = async (cid: string, address: string, receiverAddress: string) => {
+    const airdropNFT = async (url: string, address: string, receiverAddress: string) => {
         const airdropData = {
             contractName: contractName,
             contractAddress: address,
-            metadataURL: `ipfs://${cid}`,
+            metadataURL: url,
             receiverAddresses: [receiverAddress],
         };
         await axiosClient.post('/airdrop', airdropData, {
@@ -258,15 +262,6 @@ const CreateNFTPage: NextPage = () => {
                                                 )
                                             }
                                         </div>
-                                        {
-                                            imageList.length > 1 && (
-                                                <div>
-                                                    <Text className="white">
-                                                        Send each NFT to a separate address or create them in our wallet if unspecified
-                                                    </Text>
-                                                </div>
-                                            )
-                                        }
                                         {imageList.map((image, index) => (
                                             <div key={index} className="image-item mt2 flex">
                                                 <div>
@@ -285,14 +280,32 @@ const CreateNFTPage: NextPage = () => {
                                                         </button>
                                                     </div>
                                                 </div>
-                                                <div className="ml2">
+                                                <div className="ml2 w6">
                                                     <TextInput
                                                         value={addresses.get(index) ?? undefined}
-                                                        placeholder="0xABCD1234"
+                                                        placeholder="Address to send to"
                                                         onChange={(value) => {
                                                             let newAddresses = new Map(addresses)
                                                             newAddresses.set(index, value)
                                                             setAddresses(newAddresses)
+                                                        }}
+                                                    />
+                                                    <TextInput
+                                                        value={names.get(index) ?? undefined}
+                                                        placeholder="Name"
+                                                        onChange={(value) => {
+                                                            let newNames = new Map(names)
+                                                            newNames.set(index, value)
+                                                            setNames(newNames)
+                                                        }}
+                                                    />
+                                                    <TextInput
+                                                        value={descriptions.get(index) ?? undefined}
+                                                        placeholder="Description"
+                                                        onChange={(value) => {
+                                                            let newDescriptions = new Map(descriptions)
+                                                            newDescriptions.set(index, value)
+                                                            setDescriptions(newDescriptions)
                                                         }}
                                                     />
                                                 </div>
@@ -346,6 +359,14 @@ const CreateNFTPage: NextPage = () => {
                                 </Button>
                             </div>)
                         }
+                    </div>
+                )
+            }
+
+            {
+                isMakingNetworkCall && (
+                    <div className="absolute top-0 w-100 vh-100 flex justify-center items-center">
+                        <Image src={loading} alt={"loading gif"}/>
                     </div>
                 )
             }

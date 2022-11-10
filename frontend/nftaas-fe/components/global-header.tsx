@@ -16,8 +16,7 @@ export default function GlobalHeader() {
                 <a>Create Gift Card</a>
             </Link>
 
-            {/*We won't connect to metamask for now*/}
-            {/*<SignIn />*/}
+            <SignIn />
         </div>
     );
 }
