@@ -17,7 +17,7 @@ const displayNFT = require('../scripts/display-nft.js').displayNFT
 const requestMessage = require('../scripts/auth/request-message.js').requestMessage
 const authorize = require('../scripts/auth/authorize.js').authorize
 const https = require("https");
-const fs = request("fs");
+const fs = require("fs");
 
 const app = express()
 const port = 3000
